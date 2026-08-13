@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Owner Register - LocalShop</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f7f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      width: 100%;
+      max-width: 440px;
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 30px #0002;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #176b24;
+      font-size: 25px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      margin: 7px 0 22px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .required {
+      color: #d62828;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #176b24;
+    }
+
+    .register-btn {
+      width: 100%;
+      border: none;
+      background: #176b24;
+      color: white;
+      padding: 13px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      margin-top: 5px;
+    }
+
+    .register-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .error {
+      background: #ffe7e7;
+      color: #b00000;
+    }
+
+    .success {
+      background: #e7f7ea;
+      color: #176b24;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .login-link a {
+      color: #176b24;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="register-box">
+
+    <div class="logo">
+      🏪
+    </div>
+
+    <h1>
+      Create Shop Owner Account
+    </h1>
+
+    <p class="subtitle">
+      अपनी shop को LocalShop platform पर register करें।
+    </p>
+
+
+    <form id="registerForm">
+
+      <div class="form-group">
+
+        <label for="ownerName">
+          Owner Name <span class="required">*</span>
+        </label>
+
+        <input
+          id="ownerName"
+          type="text"
+          placeholder="Owner का नाम"
+          autocomplete="name"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="shopName">
+          Shop Name <span class="required">*</span>
+        </label>
+
+        <input
+          id="shopName"
+          type="text"
+          placeholder="जैसे RK Store"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="shopLocation">
+          Shop Location <span class="required">*</span>
+        </label>
+
+        <input
+          id="shopLocation"
+          type="text"
+          placeholder="जैसे Main Market"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="email">
+          Email <span class="required">*</span>
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          placeholder="owner@example.com"
+          autocomplete="email"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="password">
+          Password <span class="required">*</span>
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          placeholder="कम से कम 6 characters"
+          autocomplete="new-password"
+          minlength="6"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="confirmPassword">
+          Confirm Password <span class="required">*</span>
+        </label>
+
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="Password दोबारा डालें"
+          autocomplete="new-password"
+          minlength="6"
+          required
+        >
+
+      </div>
+
+
+      <button
+        id="registerBtn"
+        class="register-btn"
+        type="submit"
+      >
+        Create Owner Account
+      </button>
+
+    </form>
+
+
+    <div
+      id="errorMessage"
+      class="message error"
+    ></div>
+
+
+    <div
+      id="successMessage"
+      class="message success"
+    ></div>
+
+
+    <div class="login-link">
+
+      पहले से account है?
+
+      <a href="owner-login.html">
+        Login करें
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <script type="module">
+
+    /* =====================================
+       FIREBASE IMPORT
+    ===================================== */
+
+    import {
+      auth,
+      db
+    } from "./firebase.js";
+
+
+    import {
+      createUserWithEmailAndPassword,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    import {
+      doc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    /* =====================================
+       ELEMENTS
+    ===================================== */
+
+    const form =
+      document.getElementById(
+        "registerForm"
+      );
+
+
+    const registerBtn =
+      document.getElementById(
+        "registerBtn"
+      );
+
+
+    const errorMessage =
+      document.getElementById(
+        "errorMessage"
+      );
+
+
+    const successMessage =
+      document.getElementById(
+        "successMessage"
+      );
+
+
+    /* =====================================
+       MESSAGE
+    ===================================== */
+
+    function showError(
+      message
+    ) {
+
+      errorMessage.textContent =
+        message;
+
+      errorMessage.style.display =
+        "block";
+
+      successMessage.style.display =
+        "none";
+
+    }
+
+
+    function showSuccess(
+      message
+    ) {
+
+      successMessage.textContent =
+        message;
+
+      successMessage.style.display =
+        "block";
+
+      errorMessage.style.display =
+        "none";
+
+    }
+
+
+    /* =====================================
+       REGISTER
+    ===================================== */
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const ownerName =
+          document
+            .getElementById(
+              "ownerName"
+            )
+            .value
+            .trim();
+
+
+        const shopName =
+          document
+            .getElementById(
+              "shopName"
+            )
+            .value
+            .trim();
+
+
+        const shopLocation =
+          document
+            .getElementById(
+              "shopLocation"
+            )
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .getElementById(
+              "email"
+            )
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById(
+              "password"
+            )
+            .value;
+
+
+        const confirmPassword =
+          document
+            .getElementById(
+              "confirmPassword"
+            )
+            .value;
+
+
+        /* =================================
+           BASIC VALIDATION
+        ================================= */
+
+        if (
+          password !==
+          confirmPassword
+        ) {
+
+          showError(
+            "Password और Confirm Password अलग हैं।"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          password.length <
+          6
+        ) {
+
+          showError(
+            "Password कम से कम 6 characters का होना चाहिए।"
+          );
+
+          return;
+
+        }
+
+
+        registerBtn.disabled =
+          true;
+
+
+        registerBtn.textContent =
+          "Creating Account...";
+
+
+        errorMessage.style.display =
+          "none";
+
+
+        try {
+
+          /* ===============================
+             CREATE FIREBASE USER
+          =============================== */
+
+          const userCredential =
+            await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+
+          const user =
+            userCredential.user;
+
+
+          /* ===============================
+             UPDATE OWNER PROFILE
+          =============================== */
+
+          await updateProfile(
+            user,
+            {
+              displayName:
+                ownerName
+            }
+          );
+
+
+          /* ===============================
+             CREATE SHOP ID
+          =============================== */
+
+          const shopId =
+            "shop_" +
+            user.uid;
+
+
+          /* ===============================
+             SAVE OWNER
+          =============================== */
+
+          await setDoc(
+
+            doc(
+              db,
+              "owners",
+              user.uid
+            ),
+
+            {
+
+              uid:
+                user.uid,
+
+              name:
+                ownerName,
+
+              email:
+                email,
+
+              shopId:
+                shopId,
+
+              createdAt:
+                serverTimestamp()
+
+            }
+
+          );
+
+
+          /* ===============================
+             SAVE SHOP
+          =============================== */
+
+          await setDoc(
+
+            doc(
+              db,
+              "shops",
+              shopId
+            ),
+
+            {
+
+              shopId:
+                shopId,
+
+              ownerId:
+                user.uid,
+
+              ownerName:
+                ownerName,
+
+              name:
+                shopName,
+
+              location:
+                shopLocation,
+
+              status:
+                "active",
+
+              createdAt:
+                serverTimestamp()
+
+            }
+
+          );
+
+
+          /* ===============================
+             LOCAL SHOP ID
+          =============================== */
+
+          localStorage.setItem(
+
+            "localShopOwnerId",
+
+            user.uid
+
+          );
+
+
+          localStorage.setItem(
+
+            "localShopId",
+
+            shopId
+
+          );
+
+
+          localStorage.setItem(
+
+            "localShopName",
+
+            shopName
+
+          );
+
+
+          /* ===============================
+             SUCCESS
+          =============================== */
+
+          showSuccess(
+            "Account और shop successfully create हो गई।"
+          );
+
+
+          registerBtn.textContent =
+            "Account Created ✓";
+
+
+          /* ===============================
+             REDIRECT
+          =============================== */
+
+          setTimeout(
+            function() {
+
+              window.location.href =
+                "owner.html";
+
+            },
+            1500
+          );
+
+
+        }
+
+        catch(error) {
+
+          console.error(
+            error
+          );
+
+
+          let message =
+            "Account create नहीं हो सका।";
+
+
+          if (
+            error.code ===
+            "auth/email-already-in-use"
+          ) {
+
+            message =
+              "यह email पहले से registered है।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            message =
+              "Email address सही नहीं है।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/weak-password"
+          ) {
+
+            message =
+              "Password बहुत weak है। कम से कम 6 characters रखें।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/network-request-failed"
+          ) {
+
+            message =
+              "Internet connection check करें।";
+
+          }
+
+          else if (
+            error.code ===
+            "permission-denied"
+          ) {
+
+            message =
+              "Firebase permission rules check करें।";
+
+          }
+
+
+          showError(
+            message
+          );
+
+
+          registerBtn.disabled =
+            false;
+
+
+          registerBtn.textContent =
+            "Create Owner Account";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
