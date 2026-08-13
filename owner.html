@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Owner Login - LocalShop</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f7f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px #0002;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #176b24;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      margin: 8px 0 22px;
+    }
+
+    .group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #176b24;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 9px;
+      background: #176b24;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .login-btn:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: #176b24;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .error {
+      background: #ffe7e7;
+      color: #b00000;
+    }
+
+    .success {
+      background: #e7f7ea;
+      color: #176b24;
+    }
+
+    .register {
+      text-align: center;
+      margin-top: 18px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .register a {
+      color: #176b24;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+
+    <div class="logo">🏪</div>
+
+    <h1>Shop Owner Login</h1>
+
+    <p class="subtitle">
+      अपनी approved shop का dashboard खोलने के लिए login करें।
+    </p>
+
+
+    <form id="loginForm">
+
+      <div class="group">
+        <label for="email">
+          Email
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          placeholder="owner@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+
+      <div class="group">
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+
+      <button
+        id="loginBtn"
+        class="login-btn"
+        type="submit"
+      >
+        Login
+      </button>
+
+    </form>
+
+
+    <button
+      id="resetBtn"
+      class="reset-btn"
+      type="button"
+    >
+      Forgot Password?
+    </button>
+
+
+    <div
+      id="errorMessage"
+      class="message error"
+    ></div>
+
+
+    <div
+      id="successMessage"
+      class="message success"
+    ></div>
+
+
+    <div class="register">
+
+      नई shop register करनी है?
+
+      <a href="owner-register.html">
+        Register Shop
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <script type="module">
+
+    import {
+      auth,
+      db
+    } from "./firebase.js";
+
+
+    import {
+      signInWithEmailAndPassword,
+      sendPasswordResetEmail,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    import {
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    const form =
+      document.getElementById(
+        "loginForm"
+      );
+
+
+    const loginBtn =
+      document.getElementById(
+        "loginBtn"
+      );
+
+
+    const resetBtn =
+      document.getElementById(
+        "resetBtn"
+      );
+
+
+    const errorMessage =
+      document.getElementById(
+        "errorMessage"
+      );
+
+
+    const successMessage =
+      document.getElementById(
+        "successMessage"
+      );
+
+
+    function showError(message) {
+
+      errorMessage.textContent =
+        message;
+
+      errorMessage.style.display =
+        "block";
+
+      successMessage.style.display =
+        "none";
+    }
+
+
+    function showSuccess(message) {
+
+      successMessage.textContent =
+        message;
+
+      successMessage.style.display =
+        "block";
+
+      errorMessage.style.display =
+        "none";
+    }
+
+
+    function clearMessages() {
+
+      errorMessage.style.display =
+        "none";
+
+      successMessage.style.display =
+        "none";
+    }
+
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        clearMessages();
+
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        if (!email || !password) {
+
+          showError(
+            "Email और password दोनों भरें।"
+          );
+
+          return;
+        }
+
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+          "⏳ Login हो रहा है...";
+
+
+        try {
+
+          /*
+           * =====================================
+           * 1. FIREBASE AUTH LOGIN
+           * =====================================
+           */
+
+          const userCredential =
+            await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+
+          const user =
+            userCredential.user;
+
+
+          /*
+           * =====================================
+           * 2. OWNER DOCUMENT
+           * owners/{uid}
+           * =====================================
+           */
+
+          const ownerRef =
+            doc(
+              db,
+              "owners",
+              user.uid
+            );
+
+
+          const ownerSnap =
+            await getDoc(
+              ownerRef
+            );
+
+
+          if (!ownerSnap.exists()) {
+
+            await signOut(auth);
+
+            showError(
+              "Owner profile नहीं मिला। Admin/Firebase setup check करें।"
+            );
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login";
+
+            return;
+          }
+
+
+          const ownerData =
+            ownerSnap.data();
+
+
+          /*
+           * =====================================
+           * 3. SHOP ID
+           * =====================================
+           */
+
+          const shopId =
+            ownerData.shopId;
+
+
+          if (!shopId) {
+
+            await signOut(auth);
+
+            showError(
+              "इस owner account से कोई shop जुड़ी नहीं है।"
+            );
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login";
+
+            return;
+          }
+
+
+          /*
+           * =====================================
+           * 4. SHOP DOCUMENT
+           * shops/{shopId}
+           * =====================================
+           */
+
+          const shopRef =
+            doc(
+              db,
+              "shops",
+              shopId
+            );
+
+
+          const shopSnap =
+            await getDoc(
+              shopRef
+            );
+
+
+          if (!shopSnap.exists()) {
+
+            await signOut(auth);
+
+            showError(
+              "Shop record नहीं मिला।"
+            );
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login";
+
+            return;
+          }
+
+
+          const shopData =
+            shopSnap.data();
+
+
+          /*
+           * =====================================
+           * 5. APPROVAL CHECK
+           * =====================================
+           */
+
+          const status =
+            String(
+              shopData.status || ""
+            ).toLowerCase();
+
+
+          if (status !== "approved") {
+
+            await signOut(auth);
+
+
+            if (status === "pending") {
+
+              showError(
+                "आपकी shop अभी Admin approval के लिए pending है।"
+              );
+
+            }
+
+            else if (
+              status === "rejected"
+            ) {
+
+              showError(
+                "आपकी shop registration Admin ने reject कर दी है।"
+              );
+
+            }
+
+            else {
+
+              showError(
+                "आपकी shop अभी approved नहीं है।"
+              );
+
+            }
+
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login";
+
+            return;
+          }
+
+
+          /*
+           * =====================================
+           * 6. OWNER SESSION
+           *
+           * owner.html इसी नाम को check करता है।
+           * =====================================
+           */
+
+          const ownerSession = {
+
+            uid:
+              user.uid,
+
+            ownerId:
+              user.uid,
+
+            ownerName:
+              ownerData.name ||
+              shopData.ownerName ||
+              user.displayName ||
+              "Shop Owner",
+
+            email:
+              user.email,
+
+            shopId:
+              shopId,
+
+            shopName:
+              shopData.name ||
+              "My Shop",
+
+            location:
+              shopData.location ||
+              "",
+
+            status:
+              "approved"
+
+          };
+
+
+          sessionStorage.setItem(
+            "localShopOwnerSession",
+            JSON.stringify(
+              ownerSession
+            )
+          );
+
+
+          /*
+           * Backup information
+           */
+
+          localStorage.setItem(
+            "localShopOwnerId",
+            user.uid
+          );
+
+
+          localStorage.setItem(
+            "localShopId",
+            shopId
+          );
+
+
+          localStorage.setItem(
+            "localShopName",
+            shopData.name || ""
+          );
+
+
+          /*
+           * =====================================
+           * 7. SUCCESS
+           * =====================================
+           */
+
+          showSuccess(
+            "✅ Login successful! Dashboard खुल रहा है..."
+          );
+
+
+          loginBtn.textContent =
+            "Login Successful ✓";
+
+
+          /*
+           * =====================================
+           * 8. DASHBOARD
+           * =====================================
+           */
+
+          setTimeout(
+            function() {
+
+              window.location.replace(
+                "owner.html"
+              );
+
+            },
+            500
+          );
+
+        }
+
+
+        catch(error) {
+
+          console.error(
+            "OWNER LOGIN ERROR:",
+            error
+          );
+
+
+          let message =
+            "Login नहीं हो सका।";
+
+
+          if (
+            error.code ===
+            "auth/invalid-credential"
+          ) {
+
+            message =
+              "Email या password गलत है।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/wrong-password"
+          ) {
+
+            message =
+              "Password गलत है।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/user-not-found"
+          ) {
+
+            message =
+              "इस email से कोई owner account नहीं मिला।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            message =
+              "Email address सही नहीं है।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/too-many-requests"
+          ) {
+
+            message =
+              "बहुत ज्यादा login attempts हुए हैं। थोड़ी देर बाद फिर कोशिश करें।";
+
+          }
+
+          else if (
+            error.code ===
+            "auth/network-request-failed"
+          ) {
+
+            message =
+              "Internet connection check करें।";
+
+          }
+
+          else if (
+            error.code ===
+            "permission-denied"
+          ) {
+
+            message =
+              "Firestore permission denied है। Firebase Rules check करें।";
+
+          }
+
+
+          showError(
+            message
+          );
+
+
+          loginBtn.disabled =
+            false;
+
+          loginBtn.textContent =
+            "Login";
+
+        }
+
+      }
+    );
+
+
+    /*
+     * =====================================
+     * FORGOT PASSWORD
+     * =====================================
+     */
+
+    resetBtn.addEventListener(
+      "click",
+      async function() {
+
+        clearMessages();
+
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        if (!email) {
+
+          showError(
+            "पहले अपना email डालें।"
+          );
+
+          return;
+        }
+
+
+        try {
+
+          await sendPasswordResetEmail(
+            auth,
+            email
+          );
+
+
+          showSuccess(
+            "✅ Password reset email भेज दिया गया है।"
+          );
+
+        }
+
+        catch(error) {
+
+          console.error(
+            error
+          );
+
+
+          if (
+            error.code ===
+            "auth/user-not-found"
+          ) {
+
+            showError(
+              "इस email से कोई account नहीं मिला।"
+            );
+
+          }
+
+          else if (
+            error.code ===
+            "auth/invalid-email"
+          ) {
+
+            showError(
+              "Email address सही नहीं है।"
+            );
+
+          }
+
+          else {
+
+            showError(
+              "Password reset नहीं हो सका।"
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
