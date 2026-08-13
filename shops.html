@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shop A - LocalShop</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f6f8fa;
+    color:#222;
+}
+
+/* HEADER */
+
+header{
+    background:#fff;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.navbar{
+    max-width:1200px;
+    margin:auto;
+    padding:14px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    color:#176b24;
+}
+
+.logo span{
+    color:#ff6f00;
+}
+
+.back-btn{
+    border:none;
+    background:#f1f3f4;
+    padding:10px 15px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* SHOP HERO */
+
+.shop-hero{
+    background:linear-gradient(135deg,#eaf8ed,#fff4e8);
+    padding:35px 20px;
+}
+
+.shop-container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.shop-top{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+.shop-logo{
+    width:130px;
+    height:130px;
+    background:#fff;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+    box-shadow:0 5px 20px #0001;
+}
+
+.shop-info h1{
+    font-size:36px;
+    color:#176b24;
+    margin-bottom:8px;
+}
+
+.shop-info p{
+    color:#666;
+    margin:6px 0;
+}
+
+.open{
+    color:#16852a;
+    font-weight:bold;
+}
+
+.rating{
+    color:#e6a400;
+    font-weight:bold;
+}
+
+/* BUTTONS */
+
+.action-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    padding:11px 17px;
+    border:none;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.map-btn{
+    background:#176b24;
+    color:white;
+}
+
+.call-btn{
+    background:#fff;
+    color:#176b24;
+    border:1px solid #176b24;
+}
+
+/* SHOP DETAILS */
+
+.details{
+    max-width:1100px;
+    margin:25px auto;
+    padding:0 20px;
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.detail-box{
+    background:#fff;
+    padding:18px;
+    border-radius:13px;
+    border:1px solid #eee;
+}
+
+.detail-box small{
+    color:#777;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:6px;
+}
+
+/* PRODUCTS */
+
+.products{
+    max-width:1100px;
+    margin:35px auto;
+    padding:0 20px;
+}
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.search-product{
+    padding:11px 14px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    width:250px;
+}
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.product-card{
+    background:#fff;
+    border-radius:15px;
+    overflow:hidden;
+    border:1px solid #eee;
+    box-shadow:0 5px 18px #0001;
+}
+
+.product-image{
+    height:180px;
+    background:#f0f2f0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+}
+
+.product-body{
+    padding:15px;
+}
+
+.product-body h3{
+    margin-bottom:7px;
+}
+
+.product-description{
+    color:#777;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.price{
+    margin-top:10px;
+    font-size:19px;
+    font-weight:bold;
+    color:#176b24;
+}
+
+.unit{
+    font-size:13px;
+    color:#777;
+    font-weight:normal;
+}
+
+.stock{
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 9px;
+    border-radius:6px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.in-stock{
+    background:#e5f7e8;
+    color:#16852a;
+}
+
+.out-stock{
+    background:#ffe7e7;
+    color:#d62828;
+}
+
+.add-btn{
+    width:100%;
+    margin-top:12px;
+    padding:11px;
+    border:none;
+    border-radius:8px;
+    background:#ff6f00;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add-btn:disabled{
+    background:#bbb;
+    cursor:not-allowed;
+}
+
+/* CART */
+
+.cart-bar{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#176b24;
+    color:white;
+    padding:15px 20px;
+    border-radius:14px;
+    box-shadow:0 5px 20px #0003;
+    cursor:pointer;
+    z-index:2000;
+}
+
+.cart-count{
+    background:#ff6f00;
+    padding:3px 7px;
+    border-radius:20px;
+    margin-left:5px;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:3000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:500px;
+    border-radius:16px;
+    padding:22px;
+    max-height:80vh;
+    overflow:auto;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    border:none;
+    background:#eee;
+    border-radius:50%;
+    width:35px;
+    height:35px;
+    cursor:pointer;
+}
+
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.checkout{
+    width:100%;
+    margin-top:20px;
+    padding:13px;
+    border:none;
+    border-radius:9px;
+    background:#176b24;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+footer{
+    margin-top:60px;
+    background:#172019;
+    color:white;
+    padding:35px 20px;
+    text-align:center;
+}
+
+footer p{
+    color:#bbb;
+    margin-top:8px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .detail-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .shop-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .shop-info h1{
+        font-size:30px;
+    }
+
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+
+    .detail-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .section-title{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .search-product{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+<div class="navbar">
+
+<button
+type="button"
+class="back-btn"
+onclick="goBack()">
+
+← Back
+
+</button>
+
+<div class="logo">
+Local<span>Shop</span>
+</div>
+
+</div>
+
+</header>
+
+
+<!-- SHOP HERO -->
+
+<section class="shop-hero">
+
+<div class="shop-container">
+
+<div class="shop-top">
+
+<div
+class="shop-logo"
+aria-label="Shop image">
+
+🏪
+
+</div>
+
+<div class="shop-info">
+
+<h1>Shop A</h1>
+
+<p>
+🟢 <span class="open">Open Now</span>
+</p>
+
+<p>
+📍 Main Road, Your Village, Sarsa
+</p>
+
+<p>
+📏 <span id="shopDistance">
+Distance calculating...
+</span>
+</p>
+
+<p>
+⭐ <span class="rating">4.7</span>
+</p>
+
+<div class="action-buttons">
+
+<button
+type="button"
+class="action-btn map-btn"
+onclick="openMap()">
+
+🗺️ View Location
+
+</button>
+
+<button
+type="button"
+class="action-btn call-btn"
+onclick="callShop()">
+
+📞 Call Shop
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SHOP DETAILS -->
+
+<section class="details">
+
+<div class="detail-grid">
+
+<div class="detail-box">
+
+<small>Opening Time</small>
+
+<strong>
+8:00 AM
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>Closing Time</small>
+
+<strong>
+9:00 PM
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>Business Since</small>
+
+<strong>
+2018
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>Products</small>
+
+<strong>
+120+
+</strong>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section class="products">
+
+<div class="section-title">
+
+<h2>🛒 Products</h2>
+
+<input
+type="search"
+class="search-product"
+id="productSearch"
+placeholder="🔍 Search products..."
+aria-label="Search products">
+
+</div>
+
+
+<div
+class="product-grid"
+id="productGrid">
+
+
+<!-- PRODUCT 1 -->
+
+<article
+class="product-card"
+data-product="Rice"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Rice">
+
+🍚
+
+</div>
+
+<div class="product-body">
+
+<h3>Rice</h3>
+
+<p class="product-description">
+Premium quality rice
+</p>
+
+<div class="price">
+₹60
+<span class="unit">
+/ kg
+</span>
+</div>
+
+<span class="stock in-stock">
+✓ In Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+onclick="addToCart('Rice',60,'kg')">
+
+Add to Cart
+
+</button>
+
+</div>
+
+</article>
+
+
+<!-- PRODUCT 2 -->
+
+<article
+class="product-card"
+data-product="Sugar"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Sugar">
+
+🍬
+
+</div>
+
+<div class="product-body">
+
+<h3>Sugar</h3>
+
+<p class="product-description">
+Fine quality sugar
+</p>
+
+<div class="price">
+₹48
+<span class="unit">
+/ kg
+</span>
+</div>
+
+<span class="stock in-stock">
+✓ In Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+onclick="addToCart('Sugar',48,'kg')">
+
+Add to Cart
+
+</button>
+
+</div>
+
+</article>
+
+
+<!-- PRODUCT 3 -->
+
+<article
+class="product-card"
+data-product="Toothpaste"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Toothpaste">
+
+🪥
+
+</div>
+
+<div class="product-body">
+
+<h3>Toothpaste</h3>
+
+<p class="product-description">
+100g toothpaste
+</p>
+
+<div class="price">
+₹20
+<span class="unit">
+/ piece
+</span>
+</div>
+
+<span class="stock in-stock">
+✓ In Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+onclick="addToCart('Toothpaste',20,'piece')">
+
+Add to Cart
+
+</button>
+
+</div>
+
+</article>
+
+
+<!-- PRODUCT 4 OUT OF STOCK -->
+
+<article
+class="product-card"
+data-product="Cooking Oil"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Cooking Oil">
+
+🫗
+
+</div>
+
+<div class="product-body">
+
+<h3>Cooking Oil</h3>
+
+<p class="product-description">
+1 litre cooking oil
+</p>
+
+<div class="price">
+₹145
+<span class="unit">
+/ litre
+</span>
+</div>
+
+<span class="stock out-stock">
+✕ Out of Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+disabled>
+
+Out of Stock
+
+</button>
+
+</div>
+
+</article>
+
+
+<!-- PRODUCT 5 -->
+
+<article
+class="product-card"
+data-product="Soap"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Soap">
+
+🧼
+
+</div>
+
+<div class="product-body">
+
+<h3>Soap</h3>
+
+<p class="product-description">
+Bath soap
+</p>
+
+<div class="price">
+₹35
+<span class="unit">
+/ piece
+</span>
+</div>
+
+<span class="stock in-stock">
+✓ In Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+onclick="addToCart('Soap',35,'piece')">
+
+Add to Cart
+
+</button>
+
+</div>
+
+</article>
+
+
+<!-- PRODUCT 6 -->
+
+<article
+class="product-card"
+data-product="Biscuits"
+data-category="Grocery">
+
+<div
+class="product-image"
+role="img"
+aria-label="Biscuits">
+
+🍪
+
+</div>
+
+<div class="product-body">
+
+<h3>Biscuits</h3>
+
+<p class="product-description">
+Family pack biscuits
+</p>
+
+<div class="price">
+₹30
+<span class="unit">
+/ packet
+</span>
+</div>
+
+<span class="stock in-stock">
+✓ In Stock
+</span>
+
+<button
+type="button"
+class="add-btn"
+onclick="addToCart('Biscuits',30,'packet')">
+
+Add to Cart
+
+</button>
+
+</div>
+
+</article>
+
+</div>
+
+</section>
+
+
+<!-- CART BUTTON -->
+
+<div
+class="cart-bar"
+onclick="openCart()">
+
+🛒 Cart
+
+<span
+class="cart-count"
+id="cartCount">
+
+0
+
+</span>
+
+</div>
+
+
+<!-- CART MODAL -->
+
+<div
+class="modal"
+id="cartModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>🛒 Your Cart</h2>
+
+<button
+type="button"
+class="close"
+onclick="closeCart()">
+
+×
+</button>
+
+</div>
+
+<div id="cartItems">
+
+<p>
+Your cart is empty.
+</p>
+
+</div>
+
+<h3
+style="margin-top:20px"
+id="cartTotal">
+
+Total: ₹0
+
+</h3>
+
+<button
+type="button"
+class="checkout"
+onclick="placeOrder()">
+
+Proceed to Order
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<h2>LocalShop</h2>
+
+<p>
+Find Local Shops • Browse Products • Order • Pickup
+</p>
+
+</footer>
+
+
+<script>
+
+/*
+========================================
+CART
+========================================
+*/
+
+let cart = [];
+
+
+function addToCart(
+    name,
+    price,
+    unit
+){
+
+    const existing =
+        cart.find(
+            item => item.name === name
+        );
+
+
+    if(existing){
+
+        existing.quantity++;
+
+    }else{
+
+        cart.push({
+            name:name,
+            price:price,
+            unit:unit,
+            quantity:1
+        });
+
+    }
+
+
+    updateCart();
+
+    alert(
+        name +
+        " added to cart."
+    );
+
+}
+
+
+/*
+========================================
+UPDATE CART
+========================================
+*/
+
+function updateCart(){
+
+    const count =
+        cart.reduce(
+            (total,item) =>
+            total + item.quantity,
+            0
+        );
+
+
+    document.getElementById(
+        "cartCount"
+    ).textContent = count;
+
+
+    const cartItems =
+        document.getElementById(
+            "cartItems"
+        );
+
+
+    if(cart.length === 0){
+
+        cartItems.innerHTML =
+            "<p>Your cart is empty.</p>";
+
+        document.getElementById(
+            "cartTotal"
+        ).textContent =
+            "Total: ₹0";
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+    let html = "";
+
+
+    cart.forEach(function(item){
+
+        const itemTotal =
+            item.price *
+            item.quantity;
+
+
+        total += itemTotal;
+
+
+        html += `
+
+        <div class="cart-item">
+
+            <div>
+
+                <strong>
+                    ${item.name}
+                </strong>
+
+                <br>
+
+                ${item.quantity}
+                × ₹${item.price}
+
+                / ${item.unit}
+
+            </div>
+
+            <strong>
+                ₹${itemTotal}
+            </strong>
+
+        </div>
+
+        `;
+
+    });
+
+
+    cartItems.innerHTML = html;
+
+
+    document.getElementById(
+        "cartTotal"
+    ).textContent =
+        "Total: ₹" + total;
+
+}
+
+
+/*
+========================================
+OPEN CART
+========================================
+*/
+
+function openCart(){
+
+    document.getElementById(
+        "cartModal"
+    ).style.display = "flex";
+
+}
+
+
+/*
+========================================
+CLOSE CART
+========================================
+*/
+
+function closeCart(){
+
+    document.getElementById(
+        "cartModal"
+    ).style.display = "none";
+
+}
+
+
+/*
+========================================
+PRODUCT SEARCH
+========================================
+*/
+
+document
+.getElementById("productSearch")
+.addEventListener(
+    "input",
+    function(){
+
+        const search =
+            this.value
+            .toLowerCase()
+            .trim();
+
+
+        document
+        .querySelectorAll(".product-card")
+        .forEach(function(card){
+
+            const product =
+                card.dataset.product
+                .toLowerCase();
+
+
+            const category =
+                card.dataset.category
+                .toLowerCase();
+
+
+            if(
+                product.includes(search) ||
+                category.includes(search)
+            ){
+
+                card.style.display = "";
+
+            }else{
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    }
+);
+
+
+/*
+========================================
+BACK
+========================================
+*/
+
+function goBack(){
+
+    window.history.back();
+
+}
+
+
+/*
+========================================
+MAP
+========================================
+*/
+
+function openMap(){
+
+    window.open(
+        "https://www.google.com/maps",
+        "_blank"
+    );
+
+}
+
+
+/*
+========================================
+CALL
+========================================
+*/
+
+function callShop(){
+
+    window.location.href =
+        "tel:+919999999999";
+
+}
+
+
+/*
+========================================
+ORDER
+========================================
+*/
+
+function placeOrder(){
+
+    if(cart.length === 0){
+
+        alert(
+            "Please add products to your cart first."
+        );
+
+        return;
+
+    }
+
+
+    /*
+      अभी payment नहीं है।
+
+      अगला चरण:
+      Customer details +
+      Order ID +
+      WhatsApp message
+      Shop Owner को भेजेंगे।
+    */
+
+    alert(
+        "Order तैयार है! अगला चरण WhatsApp Order होगा."
+    );
+
+}
+
+</script>
+
+</body>
+</html>
