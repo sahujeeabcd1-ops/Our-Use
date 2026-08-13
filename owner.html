@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Shop Owner Dashboard</title>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7f6;
+      color: #222;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    /* HEADER */
+
+    header {
+      background: #176b24;
+      color: white;
+      padding: 15px 20px;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      border: none;
+      background: white;
+      color: #176b24;
+
+      padding: 9px 15px;
+      border-radius: 8px;
+
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* MAIN */
+
+    .container {
+      max-width: 1200px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    /* SHOP HEADER */
+
+    .shop-header {
+      background: white;
+      padding: 22px;
+
+      border-radius: 15px;
+      box-shadow: 0 4px 15px #0001;
+
+      margin-bottom: 20px;
+    }
+
+    .shop-header h1 {
+      color: #176b24;
+      margin-bottom: 8px;
+    }
+
+    .shop-header p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* GRID */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+
+    /* ADD PRODUCT */
+
+    .panel {
+      background: white;
+      border-radius: 15px;
+
+      padding: 20px;
+
+      box-shadow: 0 4px 15px #0001;
+    }
+
+    .panel h2 {
+      margin-bottom: 18px;
+      color: #176b24;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+
+      padding: 11px;
+
+      border: 1px solid #ddd;
+      border-radius: 8px;
+
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #176b24;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .add-btn {
+      width: 100%;
+
+      padding: 13px;
+
+      border: none;
+      border-radius: 9px;
+
+      background: #176b24;
+      color: white;
+
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-btn:hover {
+      background: #0f561b;
+    }
+
+    /* PRODUCT LIST */
+
+    .product-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .owner-product {
+      border: 1px solid #eee;
+      border-radius: 12px;
+
+      padding: 14px;
+
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .product-img {
+      width: 90px;
+      height: 90px;
+
+      border-radius: 10px;
+
+      background: #f1f1f1;
+
+      object-fit: cover;
+
+      flex-shrink: 0;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-info h3 {
+      margin-bottom: 5px;
+    }
+
+    .product-info p {
+      color: #777;
+      font-size: 13px;
+
+      margin-bottom: 4px;
+    }
+
+    .price {
+      color: #176b24;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .stock-status {
+      display: inline-block;
+
+      margin-top: 5px;
+
+      padding: 4px 8px;
+
+      border-radius: 15px;
+
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .in-stock {
+      background: #e5f7e8;
+      color: #16852a;
+    }
+
+    .out-stock {
+      background: #ffe7e7;
+      color: #d62828;
+    }
+
+    /* ACTIONS */
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .action-btn {
+      border: none;
+
+      padding: 8px 11px;
+
+      border-radius: 7px;
+
+      cursor: pointer;
+
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .stock-btn {
+      background: #176b24;
+      color: white;
+    }
+
+    .edit-btn {
+      background: #ff9800;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #d62828;
+      color: white;
+    }
+
+    /* EMPTY */
+
+    .empty {
+      text-align: center;
+      padding: 40px 15px;
+      color: #777;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 850px) {
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (max-width: 550px) {
+
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .logout-btn {
+        width: 100%;
+      }
+
+      .owner-product {
+        align-items: flex-start;
+      }
+
+      .product-actions {
+        width: 85px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="header-inner">
+
+      <div class="logo">
+        LocalShop Owner
+      </div>
+
+      <button
+        type="button"
+        class="logout-btn"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="container">
+
+
+    <!-- SHOP INFORMATION -->
+
+    <section class="shop-header">
+
+      <h1 id="shopName">
+        Shop A
+      </h1>
+
+      <p>
+        👤 Owner:
+        <strong id="ownerName">
+          Shop Owner
+        </strong>
+      </p>
+
+      <p>
+        📍 Sarsa Main Road
+      </p>
+
+      <p>
+        🟢 Shop Account Active
+      </p>
+
+    </section>
+
+
+    <!-- DASHBOARD -->
+
+    <div class="dashboard-grid">
+
+
+      <!-- ADD PRODUCT -->
+
+      <section class="panel">
+
+        <h2>
+          ➕ Add New Product
+        </h2>
+
+
+        <form id="productForm">
+
+
+          <div class="form-group">
+
+            <label>
+              Product Name
+            </label>
+
+            <input
+              type="text"
+              id="productName"
+              placeholder="Example: Rice"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Price
+            </label>
+
+            <input
+              type="number"
+              id="productPrice"
+              placeholder="Example: 60"
+              min="0"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Selling Unit
+            </label>
+
+            <select id="productUnit">
+
+              <option value="piece">
+                Piece
+              </option>
+
+              <option value="kg">
+                Kilogram
+              </option>
+
+              <option value="gram">
+                Gram
+              </option>
+
+              <option value="litre">
+                Litre
+              </option>
+
+              <option value="ml">
+                Millilitre
+              </option>
+
+              <option value="packet">
+                Packet
+              </option>
+
+              <option value="box">
+                Box
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Category
+            </label>
+
+            <select id="productCategory">
+
+              <option value="Grocery">
+                Grocery
+              </option>
+
+              <option value="Food">
+                Food
+              </option>
+
+              <option value="Personal Care">
+                Personal Care
+              </option>
+
+              <option value="Household">
+                Household
+              </option>
+
+              <option value="Hardware">
+                Hardware
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Product Image URL
+            </label>
+
+            <input
+              type="url"
+              id="productImage"
+              placeholder="https://example.com/image.jpg"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Product Description
+            </label>
+
+            <textarea
+              id="productDescription"
+              placeholder="Write product details..."
+            ></textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="add-btn"
+          >
+            ➕ Add Product
+          </button>
+
+        </form>
+
+      </section>
+
+
+      <!-- PRODUCT MANAGEMENT -->
+
+      <section class="panel">
+
+        <h2>
+          📦 My Products
+        </h2>
+
+
+        <div
+          id="productList"
+          class="product-list"
+        ></div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+
+    /* =========================
+       DEMO PRODUCT DATABASE
+    ========================= */
+
+    let products =
+      JSON.parse(
+        localStorage.getItem(
+          "localShopProducts"
+        )
+      ) || [
+
+        {
+          id: 1,
+
+          name: "Rice",
+
+          price: 60,
+
+          unit: "kg",
+
+          category: "Grocery",
+
+          image:
+            "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80",
+
+          description:
+            "Premium quality rice",
+
+          inStock: true
+
+        },
+
+        {
+          id: 2,
+
+          name: "Sugar",
+
+          price: 48,
+
+          unit: "kg",
+
+          category: "Grocery",
+
+          image:
+            "https://images.unsplash.com/photo-1581268498187-4a7f7a0b0f12?auto=format&fit=crop&w=500&q=80",
+
+          description:
+            "Fine quality sugar",
+
+          inStock: true
+
+        },
+
+        {
+          id: 3,
+
+          name: "Toothpaste",
+
+          price: 20,
+
+          unit: "piece",
+
+          category: "Personal Care",
+
+          image:
+            "https://images.unsplash.com/photo-1625846030840-4f6d8f0f9e5e?auto=format&fit=crop&w=500&q=80",
+
+          description:
+            "Daily use toothpaste",
+
+          inStock: false
+
+        }
+
+      ];
+
+
+    /* =========================
+       SAVE PRODUCTS
+    ========================= */
+
+    function saveProducts() {
+
+      localStorage.setItem(
+        "localShopProducts",
+        JSON.stringify(products)
+      );
+
+    }
+
+
+    /* =========================
+       DISPLAY PRODUCTS
+    ========================= */
+
+    function renderProducts() {
+
+      const list =
+        document.getElementById(
+          "productList"
+        );
+
+
+      if (
+        products.length === 0
+      ) {
+
+        list.innerHTML = `
+
+          <div class="empty">
+
+            <h3>
+              No Products Added
+            </h3>
+
+            <p>
+              Add your first product
+              using the form.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      list.innerHTML = "";
+
+
+      products.forEach(
+        product => {
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "owner-product";
+
+
+          card.innerHTML = `
+
+            <img
+              class="product-img"
+              src="${product.image || 'https://via.placeholder.com/90'}"
+              alt="${product.name}"
+              onerror="
+                this.src='https://via.placeholder.com/90'
+              "
+            >
+
+
+            <div class="product-info">
+
+              <h3>
+                ${product.name}
+              </h3>
+
+              <p>
+                ${product.category}
+              </p>
+
+              <p>
+                ${product.description || ""}
+              </p>
+
+              <div class="price">
+                ₹${product.price}
+                /
+                ${product.unit}
+              </div>
+
+
+              <span
+                class="stock-status
+                ${product.inStock
+                  ? 'in-stock'
+                  : 'out-stock'}"
+              >
+
+                ${
+                  product.inStock
+                  ? "✓ In Stock"
+                  : "✕ Out of Stock"
+                }
+
+              </span>
+
+            </div>
+
+
+            <div class="product-actions">
+
+              <button
+                type="button"
+                class="action-btn stock-btn"
+                onclick="
+                  toggleStock(${product.id})
+                "
+              >
+
+                ${
+                  product.inStock
+                  ? "Out Stock"
+                  : "In Stock"
+                }
+
+              </button>
+
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                onclick="
+                  editProduct(${product.id})
+                "
+              >
+                Edit
+              </button>
+
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                onclick="
+                  deleteProduct(${product.id})
+                "
+              >
+                Delete
+              </button>
+
+            </div>
+
+          `;
+
+
+          list.appendChild(
+            card
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       ADD PRODUCT
+    ========================= */
+
+    document
+      .getElementById(
+        "productForm"
+      )
+      .addEventListener(
+        "submit",
+        function(event) {
+
+          event.preventDefault();
+
+
+          const name =
+            document
+              .getElementById(
+                "productName"
+              )
+              .value
+              .trim();
+
+
+          const price =
+            Number(
+              document
+                .getElementById(
+                  "productPrice"
+                )
+                .value
+            );
+
+
+          const unit =
+            document
+              .getElementById(
+                "productUnit"
+              )
+              .value;
+
+
+          const category =
+            document
+              .getElementById(
+                "productCategory"
+              )
+              .value;
+
+
+          const image =
+            document
+              .getElementById(
+                "productImage"
+              )
+              .value
+              .trim();
+
+
+          const description =
+            document
+              .getElementById(
+                "productDescription"
+              )
+              .value
+              .trim();
+
+
+          const newProduct = {
+
+            id:
+              Date.now(),
+
+            name:
+              name,
+
+            price:
+              price,
+
+            unit:
+              unit,
+
+            category:
+              category,
+
+            image:
+              image,
+
+            description:
+              description,
+
+            inStock:
+              true
+
+          };
+
+
+          products.push(
+            newProduct
+          );
+
+
+          saveProducts();
+
+
+          renderProducts();
+
+
+          this.reset();
+
+
+          alert(
+            "Product successfully added!"
+          );
+
+        }
+      );
+
+
+    /* =========================
+       STOCK
+    ========================= */
+
+    function toggleStock(id) {
+
+      const product =
+        products.find(
+          item =>
+            item.id === id
+        );
+
+
+      if (!product) {
+        return;
+      }
+
+
+      product.inStock =
+        !product.inStock;
+
+
+      saveProducts();
+
+      renderProducts();
+
+    }
+
+
+    /* =========================
+       DELETE
+    ========================= */
+
+    function deleteProduct(id) {
+
+      const product =
+        products.find(
+          item =>
+            item.id === id
+        );
+
+
+      if (!product) {
+        return;
+      }
+
+
+      const confirmed =
+        confirm(
+          "क्या आप " +
+          product.name +
+          " को हटाना चाहते हैं?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      products =
+        products.filter(
+          item =>
+            item.id !== id
+        );
+
+
+      saveProducts();
+
+      renderProducts();
+
+    }
+
+
+    /* =========================
+       EDIT
+    ========================= */
+
+    function editProduct(id) {
+
+      const product =
+        products.find(
+          item =>
+            item.id === id
+        );
+
+
+      if (!product) {
+        return;
+      }
+
+
+      const newName =
+        prompt(
+          "Product Name:",
+          product.name
+        );
+
+
+      if (
+        newName === null ||
+        newName.trim() === ""
+      ) {
+        return;
+      }
+
+
+      const newPrice =
+        prompt(
+          "Product Price:",
+          product.price
+        );
+
+
+      if (
+        newPrice === null ||
+        isNaN(newPrice)
+      ) {
+        return;
+      }
+
+
+      product.name =
+        newName.trim();
+
+
+      product.price =
+        Number(newPrice);
+
+
+      saveProducts();
+
+      renderProducts();
+
+
+      alert(
+        "Product updated!"
+      );
+
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    function logout() {
+
+      const confirmed =
+        confirm(
+          "क्या आप logout करना चाहते हैं?"
+        );
+
+
+      if (confirmed) {
+
+        window.location.href =
+          "index.html";
+
+      }
+
+    }
+
+
+    /* =========================
+       SHOP NAME
+    ========================= */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const shop =
+      params.get("shop") ||
+      "Shop A";
+
+
+    document.getElementById(
+      "shopName"
+    ).textContent =
+      shop;
+
+
+    /* =========================
+       INITIAL LOAD
+    ========================= */
+
+    renderProducts();
+
+  </script>
+
+</body>
+</html>
