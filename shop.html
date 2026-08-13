@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>LocalShop - Shop</title>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+      color: #222;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+
+      padding: 13px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      color: #176b24;
+    }
+
+    .logo span {
+      color: #ff6f00;
+    }
+
+    .header-btn {
+      padding: 10px 14px;
+
+      border-radius: 9px;
+      cursor: pointer;
+
+      font-weight: bold;
+    }
+
+    .back-btn {
+      background: #fff;
+      color: #176b24;
+      border: 1px solid #176b24;
+    }
+
+    .cart-btn {
+      background: #176b24;
+      color: #fff;
+      border: none;
+    }
+
+    /* =========================
+       SHOP HERO
+    ========================= */
+
+    .shop-hero {
+      background:
+        linear-gradient(
+          135deg,
+          #eaf8ed,
+          #fff4e8
+        );
+
+      padding: 35px 20px;
+    }
+
+    .shop-container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .shop-info-wrapper {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .shop-image {
+      height: 220px;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #d8eadb,
+          #ffe1c7
+        );
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 80px;
+    }
+
+    .shop-details h1 {
+      font-size: 38px;
+      color: #176b24;
+
+      margin-bottom: 10px;
+    }
+
+    .shop-details p {
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .open {
+      color: #16852a;
+      font-weight: bold;
+    }
+
+    .rating {
+      color: #f39c12;
+      font-weight: bold;
+    }
+
+    .shop-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      padding: 11px 15px;
+
+      border: none;
+      border-radius: 9px;
+
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .location-btn {
+      background: #176b24;
+      color: #fff;
+    }
+
+    .call-btn {
+      background: #ff6f00;
+      color: #fff;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .main {
+      max-width: 1200px;
+      margin: 30px auto;
+
+      padding: 0 20px;
+    }
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      flex: 1;
+
+      padding: 14px;
+
+      border: 1px solid #ddd;
+      border-radius: 10px;
+
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-box input:focus {
+      border-color: #176b24;
+    }
+
+    .search-box button {
+      padding: 0 22px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: #ff6f00;
+      color: #fff;
+
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* =========================
+       CATEGORY
+    ========================= */
+
+    .category-list {
+      display: flex;
+      gap: 10px;
+
+      overflow-x: auto;
+
+      padding-bottom: 5px;
+      margin-bottom: 28px;
+    }
+
+    .category {
+      white-space: nowrap;
+
+      padding: 10px 16px;
+
+      border: 1px solid #ddd;
+      border-radius: 25px;
+
+      background: #fff;
+
+      cursor: pointer;
+    }
+
+    .category.active {
+      background: #176b24;
+      color: #fff;
+
+      border-color: #176b24;
+    }
+
+    /* =========================
+       PRODUCT HEADER
+    ========================= */
+
+    .product-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 18px;
+    }
+
+    .product-heading h2 {
+      font-size: 25px;
+    }
+
+    .product-count {
+      color: #777;
+      font-size: 14px;
+    }
+
+    /* =========================
+       PRODUCT GRID
+    ========================= */
+
+    .product-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 18px;
+    }
+
+    .product-card {
+      background: #fff;
+
+      border-radius: 15px;
+      overflow: hidden;
+
+      border: 1px solid #eee;
+
+      box-shadow:
+        0 5px 18px #0001;
+    }
+
+    .product-image {
+      height: 175px;
+
+      background: #f3f3f3;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 65px;
+    }
+
+    .product-body {
+      padding: 15px;
+    }
+
+    .product-body h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .description {
+      color: #777;
+      font-size: 13px;
+
+      min-height: 38px;
+
+      line-height: 1.5;
+    }
+
+    .price {
+      margin: 10px 0;
+
+      color: #176b24;
+
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .unit {
+      color: #777;
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .stock {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .in-stock {
+      color: #16852a;
+    }
+
+    .out-stock {
+      color: #d62828;
+    }
+
+    /* =========================
+       PRODUCT QUANTITY
+    ========================= */
+
+    .product-cart-controls {
+      margin-top: 12px;
+    }
+
+    .add-cart {
+      width: 100%;
+
+      padding: 11px;
+
+      border: none;
+      border-radius: 8px;
+
+      background: #176b24;
+      color: #fff;
+
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-cart:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .quantity-control {
+      display: none;
+
+      align-items: center;
+      justify-content: space-between;
+
+      border: 1px solid #176b24;
+      border-radius: 8px;
+
+      overflow: hidden;
+    }
+
+    .quantity-control.show {
+      display: flex;
+    }
+
+    .quantity-control button {
+      width: 40px;
+      height: 40px;
+
+      border: none;
+
+      background: #176b24;
+      color: #fff;
+
+      font-size: 22px;
+
+      cursor: pointer;
+    }
+
+    .quantity-control span {
+      flex: 1;
+
+      text-align: center;
+
+      font-weight: bold;
+    }
+
+    /* =========================
+       CART PANEL
+    ========================= */
+
+    .cart-panel {
+      position: fixed;
+
+      right: 20px;
+      bottom: 20px;
+
+      width: 360px;
+      max-width: calc(100% - 40px);
+
+      background: #fff;
+
+      border-radius: 17px;
+
+      box-shadow:
+        0 10px 45px #0004;
+
+      padding: 20px;
+
+      display: none;
+
+      z-index: 2000;
+    }
+
+    .cart-panel.show {
+      display: block;
+    }
+
+    .cart-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 15px;
+    }
+
+    .close-cart {
+      border: none;
+      background: transparent;
+
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    #cartItems {
+      max-height: 300px;
+
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+
+      padding: 13px 0;
+
+      border-bottom: 1px solid #eee;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+    }
+
+    .cart-item-price {
+      color: #777;
+      font-size: 13px;
+
+      margin-top: 4px;
+    }
+
+    .cart-quantity {
+      display: flex;
+      align-items: center;
+
+      gap: 6px;
+
+      margin-top: 8px;
+    }
+
+    .cart-quantity button {
+      width: 30px;
+      height: 30px;
+
+      border: none;
+      border-radius: 6px;
+
+      background: #176b24;
+      color: #fff;
+
+      font-size: 18px;
+
+      cursor: pointer;
+    }
+
+    .cart-quantity span {
+      min-width: 25px;
+
+      text-align: center;
+
+      font-weight: bold;
+    }
+
+    .cart-right {
+      text-align: right;
+    }
+
+    .remove-btn {
+      margin-top: 7px;
+
+      border: none;
+      background: none;
+
+      color: #d62828;
+
+      font-size: 12px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+
+      margin-top: 17px;
+
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    .order-btn {
+      width: 100%;
+
+      margin-top: 15px;
+      padding: 13px;
+
+      border: none;
+      border-radius: 9px;
+
+      background: #25d366;
+      color: #fff;
+
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      margin-top: 50px;
+
+      padding: 35px 20px;
+
+      background: #172019;
+
+      color: #fff;
+
+      text-align: center;
+    }
+
+    footer p {
+      color: #bbb;
+      margin-top: 8px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 1000px) {
+
+      .product-grid {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+    }
+
+    @media (max-width: 750px) {
+
+      .shop-info-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .shop-image {
+        height: 180px;
+      }
+
+      .shop-details h1 {
+        font-size: 30px;
+      }
+
+      .product-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 520px) {
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .navbar {
+        padding: 11px 12px;
+      }
+
+      .main {
+        padding: 0 12px;
+      }
+
+      .shop-hero {
+        padding: 25px 12px;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box button {
+        padding: 12px;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-panel {
+        right: 10px;
+        bottom: 10px;
+
+        width: calc(100% - 20px);
+        max-width: none;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+
+    <div class="navbar">
+
+      <button
+        type="button"
+        class="header-btn back-btn"
+        onclick="goBack()"
+      >
+        ← Back
+      </button>
+
+
+      <div class="logo">
+        Local<span>Shop</span>
+      </div>
+
+
+      <button
+        type="button"
+        class="header-btn cart-btn"
+        onclick="toggleCart()"
+      >
+        🛒 Cart
+        (<span id="cartCount">0</span>)
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       SHOP INFORMATION
+  ========================= -->
+
+  <section class="shop-hero">
+
+    <div class="shop-container">
+
+      <div class="shop-info-wrapper">
+
+
+        <div class="shop-image">
+          🏪
+        </div>
+
+
+        <div class="shop-details">
+
+          <h1 id="shopName">
+            Shop A
+          </h1>
+
+
+          <p>
+            🛒
+            <strong>
+              Grocery & Daily Needs
+            </strong>
+          </p>
+
+
+          <p>
+            📍
+            <span id="shopLocation">
+              Sarsa Main Road
+            </span>
+          </p>
+
+
+          <p>
+            📏
+            <span id="shopDistance">
+              Distance calculating...
+            </span>
+          </p>
+
+
+          <p>
+            🕐
+            <strong>Open:</strong>
+            8:00 AM - 9:00 PM
+          </p>
+
+
+          <p>
+            🟢
+            <span class="open">
+              Open Now
+            </span>
+          </p>
+
+
+          <p>
+            ⭐
+            <span class="rating">
+              4.7 / 5
+            </span>
+
+            · 125 Reviews
+          </p>
+
+
+          <div class="shop-actions">
+
+            <button
+              type="button"
+              class="action-btn location-btn"
+              onclick="showLocation()"
+            >
+              📍 View Location
+            </button>
+
+
+            <button
+              type="button"
+              class="action-btn call-btn"
+              onclick="callShop()"
+            >
+              📞 Call Shop
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main class="main">
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <input
+        type="search"
+        id="productSearch"
+        placeholder="🔍 Search product..."
+        aria-label="Search products"
+      >
+
+
+      <button
+        type="button"
+        onclick="searchProducts()"
+      >
+        Search
+      </button>
+
+    </div>
+
+
+    <!-- CATEGORIES -->
+
+    <div class="category-list">
+
+      <button
+        type="button"
+        class="category active"
+        data-category="All"
+      >
+        All
+      </button>
+
+
+      <button
+        type="button"
+        class="category"
+        data-category="Grocery"
+      >
+        🛒 Grocery
+      </button>
+
+
+      <button
+        type="button"
+        class="category"
+        data-category="Food"
+      >
+        🍪 Food
+      </button>
+
+
+      <button
+        type="button"
+        class="category"
+        data-category="Personal Care"
+      >
+        🧴 Personal Care
+      </button>
+
+
+      <button
+        type="button"
+        class="category"
+        data-category="Household"
+      >
+        🏠 Household
+      </button>
+
+    </div>
+
+
+    <!-- PRODUCT HEADING -->
+
+    <div class="product-heading">
+
+      <h2>
+        Products
+      </h2>
+
+      <span
+        class="product-count"
+        id="productCount"
+      >
+        8 Products
+      </span>
+
+    </div>
+
+
+    <!-- =========================
+         PRODUCT GRID
+    ========================= -->
+
+    <div
+      class="product-grid"
+      id="productGrid"
+    >
+
+
+      <!-- PRODUCT 1 -->
+
+      <article
+        class="product-card"
+        data-name="Rice"
+        data-category="Grocery"
+        data-price="60"
+        data-unit="kg"
+      >
+
+        <div class="product-image">
+          🍚
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Rice
+          </h3>
+
+
+          <p class="description">
+            Premium quality rice
+          </p>
+
+
+          <div class="price">
+            ₹60
+            <span class="unit">
+              / kg
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Rice',
+                60,
+                'kg'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Rice',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span
+                data-quantity="Rice"
+              >
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Rice',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 2 -->
+
+      <article
+        class="product-card"
+        data-name="Sugar"
+        data-category="Grocery"
+        data-price="48"
+        data-unit="kg"
+      >
+
+        <div class="product-image">
+          🍬
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Sugar
+          </h3>
+
+
+          <p class="description">
+            Fine quality sugar
+          </p>
+
+
+          <div class="price">
+            ₹48
+            <span class="unit">
+              / kg
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Sugar',
+                48,
+                'kg'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Sugar',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Sugar">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Sugar',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 3 -->
+
+      <article
+        class="product-card"
+        data-name="Toothpaste"
+        data-category="Personal Care"
+        data-price="20"
+        data-unit="piece"
+      >
+
+        <div class="product-image">
+          🪥
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Toothpaste
+          </h3>
+
+
+          <p class="description">
+            Daily use toothpaste
+          </p>
+
+
+          <div class="price">
+            ₹20
+            <span class="unit">
+              / piece
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Toothpaste',
+                20,
+                'piece'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Toothpaste',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Toothpaste">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Toothpaste',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 4 -->
+
+      <article
+        class="product-card"
+        data-name="Biscuits"
+        data-category="Food"
+        data-price="10"
+        data-unit="packet"
+      >
+
+        <div class="product-image">
+          🍪
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Biscuits
+          </h3>
+
+
+          <p class="description">
+            Fresh packet biscuits
+          </p>
+
+
+          <div class="price">
+            ₹10
+            <span class="unit">
+              / packet
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Biscuits',
+                10,
+                'packet'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Biscuits',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Biscuits">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Biscuits',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 5 -->
+
+      <article
+        class="product-card"
+        data-name="Cooking Oil"
+        data-category="Grocery"
+        data-price="130"
+        data-unit="litre"
+      >
+
+        <div class="product-image">
+          🫗
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Cooking Oil
+          </h3>
+
+
+          <p class="description">
+            Refined cooking oil
+          </p>
+
+
+          <div class="price">
+            ₹130
+            <span class="unit">
+              / litre
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Cooking Oil',
+                130,
+                'litre'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Cooking Oil',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Cooking Oil">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Cooking Oil',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 6 -->
+
+      <article
+        class="product-card"
+        data-name="Soap"
+        data-category="Personal Care"
+        data-price="35"
+        data-unit="piece"
+      >
+
+        <div class="product-image">
+          🧼
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Soap
+          </h3>
+
+
+          <p class="description">
+            Bathing soap
+          </p>
+
+
+          <div class="price">
+            ₹35
+            <span class="unit">
+              / piece
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Soap',
+                35,
+                'piece'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Soap',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Soap">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Soap',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 7 -->
+
+      <article
+        class="product-card"
+        data-name="Detergent"
+        data-category="Household"
+        data-price="90"
+        data-unit="packet"
+      >
+
+        <div class="product-image">
+          🧺
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Detergent
+          </h3>
+
+
+          <p class="description">
+            Laundry detergent
+          </p>
+
+
+          <div class="price">
+            ₹90
+            <span class="unit">
+              / packet
+            </span>
+          </div>
+
+
+          <div class="stock in-stock">
+            ✓ In Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addProduct(
+                this,
+                'Detergent',
+                90,
+                'packet'
+              )"
+            >
+              + Add to Cart
+            </button>
+
+
+            <div class="quantity-control">
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Detergent',
+                  -1
+                )"
+              >
+                −
+              </button>
+
+
+              <span data-quantity="Detergent">
+                0
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeProductQuantity(
+                  'Detergent',
+                  1
+                )"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PRODUCT 8 OUT OF STOCK -->
+
+      <article
+        class="product-card"
+        data-name="Tea"
+        data-category="Grocery"
+        data-price="120"
+        data-unit="packet"
+      >
+
+        <div class="product-image">
+          ☕
+        </div>
+
+
+        <div class="product-body">
+
+          <h3>
+            Tea
+          </h3>
+
+
+          <p class="description">
+            Premium tea
+          </p>
+
+
+          <div class="price">
+            ₹120
+            <span class="unit">
+              / packet
+            </span>
+          </div>
+
+
+          <div class="stock out-stock">
+            ✕ Out of Stock
+          </div>
+
+
+          <div class="product-cart-controls">
+
+            <button
+              type="button"
+              class="add-cart"
+              disabled
+            >
+              Out of Stock
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================
+       CART
+  ========================= -->
+
+  <div
+    class="cart-panel"
+    id="cartPanel"
+  >
+
+    <div class="cart-title">
+
+      <h2>
+        🛒 Your Cart
+      </h2>
+
+
+      <button
+        type="button"
+        class="close-cart"
+        onclick="toggleCart()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div id="cartItems">
+
+      <p style="color:#777;">
+        Your cart is empty.
+      </p>
+
+    </div>
+
+
+    <div class="cart-total">
+
+      <span>
+        Total
+      </span>
+
+      <span id="cartTotal">
+        ₹0
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="order-btn"
+      onclick="sendOrderToWhatsApp()"
+    >
+      📱 Order on WhatsApp
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <h2>
+      LocalShop
+    </h2>
+
+    <p>
+      Find Local Shops • Browse Products •
+      Order • Pickup
+    </p>
+
+  </footer>
+
+
+  <script>
+
+    /* =========================
+       SHOP DATA
+    ========================= */
+
+    const shopData = {
+
+      "Shop A": {
+        location: "Sarsa Main Road",
+        distance: "450 meters",
+        phone: "9999999999"
+      },
+
+      "Shop B": {
+        location: "Sarsa Market Road",
+        distance: "780 meters",
+        phone: "9999999998"
+      },
+
+      "Shop C": {
+        location: "Sarsa Station Road",
+        distance: "1.2 km",
+        phone: "9999999997"
+      }
+
+    };
+
+
+    /* =========================
+       URL SHOP NAME
+    ========================= */
+
+    const urlParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const shopName =
+      urlParams.get("shop") ||
+      "Shop A";
+
+
+    const currentShop =
+      shopData[shopName] ||
+      shopData["Shop A"];
+
+
+    document.getElementById(
+      "shopName"
+    ).textContent = shopName;
+
+
+    document.getElementById(
+      "shopLocation"
+    ).textContent =
+      currentShop.location;
+
+
+    document.getElementById(
+      "shopDistance"
+    ).textContent =
+      currentShop.distance;
+
+
+    /* =========================
+       CART
+    ========================= */
+
+    let cart = [];
+
+
+    /* =========================
+       ADD PRODUCT
+    ========================= */
+
+    function addProduct(
+      button,
+      name,
+      price,
+      unit
+    ) {
+
+      const existing =
+        cart.find(
+          item =>
+            item.name === name
+        );
+
+
+      if (existing) {
+
+        existing.quantity++;
+
+      } else {
+
+        cart.push({
+
+          name: name,
+
+          price: price,
+
+          unit: unit,
+
+          quantity: 1
+
+        });
+
+      }
+
+
+      /*
+      Product card button
+      hide करो
+      */
+
+      const controls =
+        button.parentElement;
+
+
+      button.style.display =
+        "none";
+
+
+      const quantityControl =
+        controls.querySelector(
+          ".quantity-control"
+        );
+
+
+      quantityControl.classList.add(
+        "show"
+      );
+
+
+      updateProductQuantity(
+        name
+      );
+
+
+      updateCart();
+
+
+      /*
+      Cart खोलो
+      */
+
+      document
+        .getElementById(
+          "cartPanel"
+        )
+        .classList.add(
+          "show"
+        );
+
+    }
+
+
+    /* =========================
+       PRODUCT + / -
+    ========================= */
+
+    function changeProductQuantity(
+      name,
+      change
+    ) {
+
+      const item =
+        cart.find(
+          product =>
+            product.name === name
+        );
+
+
+      if (!item) {
+        return;
+      }
+
+
+      item.quantity += change;
+
+
+      /*
+      Quantity 0 हो गई
+      */
+
+      if (item.quantity <= 0) {
+
+        cart =
+          cart.filter(
+            product =>
+              product.name !== name
+          );
+
+
+        resetProductButton(
+          name
+        );
+
+      }
+
+      else {
+
+        updateProductQuantity(
+          name
+        );
+
+      }
+
+
+      updateCart();
+
+    }
+
+
+    /* =========================
+       UPDATE PRODUCT CARD
+    ========================= */
+
+    function updateProductQuantity(
+      name
+    ) {
+
+      const item =
+        cart.find(
+          product =>
+            product.name === name
+        );
+
+
+      const cards =
+        document.querySelectorAll(
+          ".product-card"
+        );
+
+
+      cards.forEach(
+        card => {
+
+          if (
+            card.dataset.name ===
+            name
+          ) {
+
+            const quantity =
+              card.querySelector(
+                "[data-quantity]"
+              );
+
+
+            if (quantity && item) {
+
+              quantity.textContent =
+                item.quantity;
+
+            }
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       RESET PRODUCT BUTTON
+    ========================= */
+
+    function resetProductButton(
+      name
+    ) {
+
+      const cards =
+        document.querySelectorAll(
+          ".product-card"
+        );
+
+
+      cards.forEach(
+        card => {
+
+          if (
+            card.dataset.name ===
+            name
+          ) {
+
+            const addButton =
+              card.querySelector(
+                ".add-cart"
+              );
+
+
+            const quantityControl =
+              card.querySelector(
+                ".quantity-control"
+              );
+
+
+            if (addButton) {
+
+              addButton.style.display =
+                "block";
+
+            }
+
+
+            if (quantityControl) {
+
+              quantityControl.classList.remove(
+                "show"
+              );
+
+            }
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       UPDATE CART
+    ========================= */
+
+    function updateCart() {
+
+      const cartItems =
+        document.getElementById(
+          "cartItems"
+        );
+
+
+      const cartCount =
+        document.getElementById(
+          "cartCount"
+        );
+
+
+      const cartTotal =
+        document.getElementById(
+          "cartTotal"
+        );
+
+
+      let totalQuantity = 0;
+
+      let totalPrice = 0;
+
+
+      cart.forEach(
+        item => {
+
+          totalQuantity +=
+            item.quantity;
+
+
+          totalPrice +=
+            item.price *
+            item.quantity;
+
+        }
+      );
+
+
+      cartCount.textContent =
+        totalQuantity;
+
+
+      cartTotal.textContent =
+        "₹" + totalPrice;
+
+
+      /*
+      Empty
+      */
+
+      if (
+        cart.length === 0
+      ) {
+
+        cartItems.innerHTML = `
+
+          <p style="
+            color:#777;
+            padding:10px 0;
+          ">
+            Your cart is empty.
+          </p>
+
+        `;
+
+        return;
+
+      }
+
+
+      /*
+      Create cart
+      */
+
+      cartItems.innerHTML = "";
+
+
+      cart.forEach(
+        (item, index) => {
+
+          const itemTotal =
+            item.price *
+            item.quantity;
+
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          div.className =
+            "cart-item";
+
+
+          div.innerHTML = `
+
+            <div class="cart-item-info">
+
+              <div class="cart-item-name">
+                ${item.name}
+              </div>
+
+              <div class="cart-item-price">
+                ₹${item.price}
+                /
+                ${item.unit}
+              </div>
+
+
+              <div class="cart-quantity">
+
+                <button
+                  type="button"
+                  onclick="
+                    decreaseCartQuantity(
+                      ${index}
+                    )
+                  "
+                >
+                  −
+                </button>
+
+
+                <span>
+                  ${item.quantity}
+                </span>
+
+
+                <button
+                  type="button"
+                  onclick="
+                    increaseCartQuantity(
+                      ${index}
+                    )
+                  "
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div class="cart-right">
+
+              <strong>
+                ₹${itemTotal}
+              </strong>
+
+              <br>
+
+              <button
+                type="button"
+                class="remove-btn"
+                onclick="
+                  removeFromCart(
+                    ${index}
+                  )
+                "
+              >
+                Remove
+              </button>
+
+            </div>
+
+          `;
+
+
+          cartItems.appendChild(
+            div
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       CART +
+    ========================= */
+
+    function increaseCartQuantity(
+      index
+    ) {
+
+      cart[index].quantity++;
+
+      updateProductQuantity(
+        cart[index].name
+      );
+
+      updateCart();
+
+    }
+
+
+    /* =========================
+       CART -
+    ========================= */
+
+    function decreaseCartQuantity(
+      index
+    ) {
+
+      const name =
+        cart[index].name;
+
+
+      cart[index].quantity--;
+
+
+      if (
+        cart[index].quantity <= 0
+      ) {
+
+        cart.splice(
+          index,
+          1
+        );
+
+
+        resetProductButton(
+          name
+        );
+
+      }
+
+      else {
+
+        updateProductQuantity(
+          name
+        );
+
+      }
+
+
+      updateCart();
+
+    }
+
+
+    /* =========================
+       REMOVE
+    ========================= */
+
+    function removeFromCart(
+      index
+    ) {
+
+      const name =
+        cart[index].name;
+
+
+      cart.splice(
+        index,
+        1
+      );
+
+
+      resetProductButton(
+        name
+      );
+
+
+      updateCart();
+
+    }
+
+
+    /* =========================
+       OPEN / CLOSE CART
+    ========================= */
+
+    function toggleCart() {
+
+      document
+        .getElementById(
+          "cartPanel"
+        )
+        .classList.toggle(
+          "show"
+        );
+
+    }
+
+
+    /* =========================
+       PRODUCT SEARCH
+    ========================= */
+
+    function searchProducts() {
+
+      const query =
+        document
+          .getElementById(
+            "productSearch"
+          )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      document
+        .querySelectorAll(
+          ".product-card"
+        )
+        .forEach(
+          card => {
+
+            const name =
+              card.dataset.name
+              .toLowerCase();
+
+
+            const category =
+              card.dataset.category
+              .toLowerCase();
+
+
+            if (
+              !query ||
+              name.includes(query) ||
+              category.includes(query)
+            ) {
+
+              card.style.display =
+                "";
+
+            }
+
+            else {
+
+              card.style.display =
+                "none";
+
+            }
+
+          }
+        );
+
+    }
+
+
+    /*
+    LIVE SEARCH
+    */
+
+    document
+      .getElementById(
+        "productSearch"
+      )
+      .addEventListener(
+        "input",
+        searchProducts
+      );
+
+
+    /* =========================
+       CATEGORY FILTER
+    ========================= */
+
+    document
+      .querySelectorAll(
+        ".category"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const category =
+                button.dataset.category;
+
+
+              document
+                .querySelectorAll(
+                  ".category"
+                )
+                .forEach(
+                  item =>
+                    item.classList.remove(
+                      "active"
+                    )
+                );
+
+
+              button.classList.add(
+                "active"
+              );
+
+
+              document
+                .querySelectorAll(
+                  ".product-card"
+                )
+                .forEach(
+                  card => {
+
+                    if (
+                      category ===
+                      "All" ||
+                      card.dataset.category ===
+                      category
+                    ) {
+
+                      card.style.display =
+                        "";
+
+                    }
+
+                    else {
+
+                      card.style.display =
+                        "none";
+
+                    }
+
+                  }
+                );
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =========================
+       BACK
+    ========================= */
+
+    function goBack() {
+
+      window.location.href =
+        "index.html";
+
+    }
+
+
+    /* =========================
+       LOCATION
+    ========================= */
+
+    function showLocation() {
+
+      alert(
+
+        shopName +
+        "\n\n📍 " +
+        currentShop.location +
+        "\n📏 " +
+        currentShop.distance
+
+      );
+
+    }
+
+
+    /* =========================
+       CALL
+    ========================= */
+
+    function callShop() {
+
+      window.location.href =
+        "tel:" +
+        currentShop.phone;
+
+    }
+
+
+    /* =========================
+       WHATSAPP ORDER
+    ========================= */
+
+    function sendOrderToWhatsApp() {
+
+      if (
+        cart.length === 0
+      ) {
+
+        alert(
+          "पहले cart में product add करें।"
+        );
+
+        return;
+
+      }
+
+
+      let message =
+        "Hello " +
+        shopName +
+        ",%0A%0A" +
+        "I want to place an order:%0A";
+
+
+      let total = 0;
+
+
+      cart.forEach(
+        item => {
+
+          const itemTotal =
+            item.price *
+            item.quantity;
+
+
+          total +=
+            itemTotal;
+
+
+          message +=
+            "• " +
+            item.name +
+            " × " +
+            item.quantity +
+            " = ₹" +
+            itemTotal +
+            "%0A";
+
+        }
+      );
+
+
+      message +=
+        "%0ATotal: ₹" +
+        total;
+
+
+      /*
+      अभी DEMO number है।
+      बाद में Shop Owner का actual
+      WhatsApp number database से आएगा।
+      */
+
+      const phone =
+        currentShop.phone;
+
+
+      const url =
+        "https://wa.me/91" +
+        phone +
+        "?text=" +
+        message;
+
+
+      window.open(
+        url,
+        "_blank"
+      );
+
+    }
+
+
+    /* =========================
+       INITIAL
+    ========================= */
+
+    updateCart();
+
+  </script>
+
+</body>
+</html>
