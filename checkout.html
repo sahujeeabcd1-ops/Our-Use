@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout - LocalShop</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7f6;
+      color: #222;
+    }
+
+    header {
+      background: #176b24;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 12px #0002;
+    }
+
+    .header-inner {
+      max-width: 850px;
+      margin: auto;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      border: none;
+      background: white;
+      color: #176b24;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+      padding: 18px 15px 50px;
+    }
+
+    .page-title {
+      margin-bottom: 15px;
+    }
+
+    .page-title h1 {
+      color: #176b24;
+      font-size: 25px;
+    }
+
+    .page-title p {
+      color: #777;
+      margin-top: 5px;
+      font-size: 13px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px #0001;
+    }
+
+    .card h2 {
+      color: #176b24;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 13px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .required {
+      color: #d62828;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #176b24;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .location-box {
+      background: #f1f8f2;
+      border: 1px solid #d8eadb;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .location-status {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .location-btn {
+      border: none;
+      background: #176b24;
+      color: white;
+      padding: 10px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .location-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .location-result {
+      display: none;
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #176b24;
+    }
+
+    .order-item {
+      display: flex;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .order-item img {
+      width: 62px;
+      height: 62px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+    }
+
+    .order-info {
+      flex: 1;
+    }
+
+    .order-name {
+      font-weight: bold;
+      color: #176b24;
+      font-size: 14px;
+    }
+
+    .order-variant {
+      color: #777;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .order-qty {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .order-price {
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .summary-total {
+      border-top: 1px solid #ddd;
+      margin-top: 7px;
+      padding-top: 13px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #176b24;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 9px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .payment-option input {
+      width: auto;
+    }
+
+    .payment-text strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .payment-text span {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .place-order {
+      width: 100%;
+      border: none;
+      background: #176b24;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .place-order:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 15px;
+    }
+
+    .empty h2 {
+      color: #d62828;
+      margin-bottom: 8px;
+    }
+
+    .empty p {
+      color: #777;
+      margin-bottom: 15px;
+    }
+
+    .shop-info {
+      color: #666;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .success {
+      display: none;
+      text-align: center;
+      padding: 35px 15px;
+    }
+
+    .success-icon {
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    .success h2 {
+      color: #176b24;
+      margin-bottom: 8px;
+    }
+
+    .order-id {
+      display: inline-block;
+      background: #f1f8f2;
+      padding: 9px 14px;
+      border-radius: 8px;
+      color: #176b24;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .home-btn {
+      border: none;
+      background: #176b24;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .error {
+      color: #d62828;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 14px;
+      }
+
+      .page-title h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+
+    <div>
+      <div class="brand">
+        🛒 Checkout
+      </div>
+
+      <div
+        id="headerShopName"
+        class="shop-info"
+        style="color:white;"
+      >
+        Local Shop
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="back-btn"
+      onclick="goBack()"
+    >
+      ← Back
+    </button>
+
+  </div>
+</header>
+
+
+<main class="container">
+
+  <!-- CHECKOUT AREA -->
+
+  <div id="checkoutArea">
+
+    <div class="page-title">
+
+      <h1>
+        Place Your Order
+      </h1>
+
+      <p>
+        अपनी details भरकर order confirm करें।
+      </p>
+
+    </div>
+
+
+    <!-- CUSTOMER DETAILS -->
+
+    <section class="card">
+
+      <h2>
+        👤 Customer Details
+      </h2>
+
+
+      <div class="form-group">
+
+        <label for="customerName">
+          Name <span class="required">*</span>
+        </label>
+
+        <input
+          id="customerName"
+          type="text"
+          placeholder="अपना नाम लिखें"
+          autocomplete="name"
+        >
+
+        <div
+          id="nameError"
+          class="error"
+        >
+          कृपया अपना नाम लिखें।
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="customerPhone">
+          Mobile Number <span class="required">*</span>
+        </label>
+
+        <input
+          id="customerPhone"
+          type="tel"
+          placeholder="10 digit mobile number"
+          maxlength="10"
+          inputmode="numeric"
+          autocomplete="tel"
+        >
+
+        <div
+          id="phoneError"
+          class="error"
+        >
+          सही 10 digit mobile number डालें।
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="customerAddress">
+          Delivery Address <span class="required">*</span>
+        </label>
+
+        <textarea
+          id="customerAddress"
+          placeholder="House no., street, area, landmark..."
+          autocomplete="street-address"
+        ></textarea>
+
+        <div
+          id="addressError"
+          class="error"
+        >
+          कृपया delivery address डालें।
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- LOCATION -->
+
+    <section class="card">
+
+      <h2>
+        📍 Delivery Location
+      </h2>
+
+      <p style="font-size:12px;color:#777;">
+        Accurate delivery के लिए अपनी current location share कर सकते हैं।
+      </p>
+
+
+      <div class="location-box">
+
+        <div
+          id="locationStatus"
+          class="location-status"
+        >
+          Location अभी select नहीं की गई है।
+        </div>
+
+
+        <button
+          id="locationBtn"
+          type="button"
+          class="location-btn"
+          onclick="getLocation()"
+        >
+          📍 Use Current Location
+        </button>
+
+
+        <div
+          id="locationResult"
+          class="location-result"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ORDER SUMMARY -->
+
+    <section class="card">
+
+      <h2>
+        🛍️ Your Order
+      </h2>
+
+
+      <div id="orderItems"></div>
+
+
+      <div class="summary-row">
+
+        <span>
+          Items
+        </span>
+
+        <strong id="itemCount">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>
+          Subtotal
+        </span>
+
+        <strong id="subtotal">
+          ₹0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>
+          Delivery
+        </span>
+
+        <strong id="deliveryCharge">
+          Free
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row summary-total">
+
+        <span>
+          Total
+        </span>
+
+        <span id="grandTotal">
+          ₹0
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- PAYMENT -->
+
+    <section class="card">
+
+      <h2>
+        💳 Payment Method
+      </h2>
+
+
+      <label class="payment-option">
+
+        <input
+          type="radio"
+          name="payment"
+          value="cod"
+          checked
+        >
+
+        <div class="payment-text">
+
+          <strong>
+            Cash on Delivery
+          </strong>
+
+          <span>
+            Delivery के समय payment करें।
+          </span>
+
+        </div>
+
+      </label>
+
+
+      <label class="payment-option">
+
+        <input
+          type="radio"
+          name="payment"
+          value="upi"
+        >
+
+        <div class="payment-text">
+
+          <strong>
+            UPI
+          </strong>
+
+          <span>
+            UPI payment option — बाद में payment integration जोड़ा जा सकता है।
+          </span>
+
+        </div>
+
+      </label>
+
+    </section>
+
+
+    <!-- PLACE ORDER -->
+
+    <section class="card">
+
+      <button
+        id="placeOrderBtn"
+        type="button"
+        class="place-order"
+        onclick="placeOrder()"
+      >
+        ✅ Place Order
+      </button>
+
+    </section>
+
+  </div>
+
+
+  <!-- EMPTY CART -->
+
+  <section
+    id="emptyArea"
+    class="card empty"
+    style="display:none;"
+  >
+
+    <h2>
+      🛒 Cart Empty
+    </h2>
+
+    <p>
+      आपके cart में कोई product नहीं है।
+    </p>
+
+    <button
+      type="button"
+      class="home-btn"
+      onclick="goToShop()"
+    >
+      ← Back to Shop
+    </button>
+
+  </section>
+
+
+  <!-- SUCCESS -->
+
+  <section
+    id="successArea"
+    class="card success"
+  >
+
+    <div class="success-icon">
+      🎉
+    </div>
+
+    <h2>
+      Order Placed Successfully!
+    </h2>
+
+    <p>
+      आपका order successfully place हो गया है।
+    </p>
+
+    <div
+      id="orderId"
+      class="order-id"
+    >
+      Order ID: --
+    </div>
+
+    <p
+      id="successMessage"
+      style="font-size:12px;color:#777;line-height:1.6;"
+    ></p>
+
+    <button
+      type="button"
+      class="home-btn"
+      onclick="goToShop()"
+    >
+      Continue Shopping
+    </button>
+
+  </section>
+
+</main>
+
+
+<script>
+
+  /* =========================================
+     SHOP ID
+  ========================================= */
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  const shopId =
+    params.get("shop") ||
+    "shop001";
+
+
+  /* =========================================
+     SHOP INFORMATION
+  ========================================= */
+
+  const shopInfo = {
+
+    shop001: {
+      name: "Local Grocery Store"
+    },
+
+    shop002: {
+      name: "RB Store"
+    },
+
+    shop003: {
+      name: "RC Store"
+    },
+
+    shop004: {
+      name: "RD Store"
+    }
+
+  };
+
+
+  const currentShop =
+    shopInfo[shopId] || {
+      name: "Local Shop"
+    };
+
+
+  document.getElementById(
+    "headerShopName"
+  ).textContent =
+    currentShop.name;
+
+
+  /* =========================================
+     LOAD CART
+  ========================================= */
+
+  let cart =
+    JSON.parse(
+      localStorage.getItem(
+        "localShopCart_" +
+        shopId
+      )
+    ) || [];
+
+
+  /* =========================================
+     LOCATION DATA
+  ========================================= */
+
+  let userLatitude =
+    null;
+
+  let userLongitude =
+    null;
+
+
+  /* =========================================
+     MONEY
+  ========================================= */
+
+  function money(
+    amount
+  ) {
+
+    return (
+      "₹" +
+      Number(
+        amount
+      ).toFixed(2)
+    );
+
+  }
+
+
+  /* =========================================
+     ESCAPE HTML
+  ========================================= */
+
+  function escapeHtml(
+    text
+  ) {
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.textContent =
+      String(
+        text
+      );
+
+
+    return div.innerHTML;
+
+  }
+
+
+  /* =========================================
+     RENDER ORDER
+  ========================================= */
+
+  function renderOrder() {
+
+    const container =
+      document.getElementById(
+        "orderItems"
+      );
+
+
+    container.innerHTML = "";
+
+
+    let subtotal =
+      0;
+
+
+    let itemCount =
+      0;
+
+
+    cart.forEach(
+      item => {
+
+        const itemTotal =
+          Number(
+            item.price
+          ) *
+          Number(
+            item.cartQty
+          );
+
+
+        subtotal +=
+          itemTotal;
+
+
+        itemCount +=
+          Number(
+            item.cartQty
+          );
+
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "order-item";
+
+
+        const image =
+          item.image ||
+          "https://via.placeholder.com/100?text=Product";
+
+
+        div.innerHTML = `
+
+          <img
+            src="${escapeHtml(
+              image
+            )}"
+            alt="${escapeHtml(
+              item.name
+            )}"
+            onerror="
+              this.src='https://via.placeholder.com/100?text=Product'
+            "
+          >
+
+
+          <div class="order-info">
+
+            <div class="order-name">
+              ${escapeHtml(
+                item.name
+              )}
+            </div>
+
+
+            <div class="order-variant">
+
+              ${escapeHtml(
+                item.quantityLabel ||
+                ""
+              )}
+
+            </div>
+
+
+            <div class="order-qty">
+
+              Quantity:
+              ${item.cartQty}
+
+            </div>
+
+          </div>
+
+
+          <div class="order-price">
+
+            ${money(
+              itemTotal
+            )}
+
+          </div>
+
+        `;
+
+
+        container.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+    document.getElementById(
+      "itemCount"
+    ).textContent =
+      itemCount;
+
+
+    document.getElementById(
+      "subtotal"
+    ).textContent =
+      money(
+        subtotal
+      );
+
+
+    /*
+      अभी delivery FREE रखी गई है।
+      बाद में distance के हिसाब से
+      delivery charge लगाया जा सकता है।
+    */
+
+    const delivery =
+      0;
+
+
+    document.getElementById(
+      "deliveryCharge"
+    ).textContent =
+      delivery === 0
+        ? "Free"
+        : money(
+            delivery
+          );
+
+
+    document.getElementById(
+      "grandTotal"
+    ).textContent =
+      money(
+        subtotal +
+        delivery
+      );
+
+  }
+
+
+  /* =========================================
+     GET CURRENT LOCATION
+  ========================================= */
+
+  function getLocation() {
+
+    const status =
+      document.getElementById(
+        "locationStatus"
+      );
+
+
+    const result =
+      document.getElementById(
+        "locationResult"
+      );
+
+
+    const button =
+      document.getElementById(
+        "locationBtn"
+      );
+
+
+    if (
+      !navigator.geolocation
+    ) {
+
+      status.textContent =
+        "इस browser में location support नहीं है।";
+
+      return;
+
+    }
+
+
+    status.textContent =
+      "📍 Location प्राप्त की जा रही है...";
+
+
+    button.disabled =
+      true;
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      function(position) {
+
+        userLatitude =
+          position.coords.latitude;
+
+
+        userLongitude =
+          position.coords.longitude;
+
+
+        status.textContent =
+          "✅ Current location मिल गई।";
+
+
+        result.style.display =
+          "block";
+
+
+        result.innerHTML = `
+
+          Latitude:
+          ${userLatitude.toFixed(6)}
+
+          <br>
+
+          Longitude:
+          ${userLongitude.toFixed(6)}
+
+          <br>
+
+          Accuracy:
+          लगभग
+          ${Math.round(
+            position.coords.accuracy
+          )}
+          meters
+
+        `;
+
+
+        button.textContent =
+          "✅ Location Selected";
+
+
+        button.disabled =
+          false;
+
+      },
+
+
+      function(error) {
+
+        button.disabled =
+          false;
+
+
+        status.textContent =
+          "❌ Location नहीं मिल सकी।";
+
+
+        if (
+          error.code ===
+          error.PERMISSION_DENIED
+        ) {
+
+          result.style.display =
+            "block";
+
+          result.textContent =
+            "Location permission allow करें और फिर दोबारा try करें।";
+
+        }
+
+        else {
+
+          result.style.display =
+            "block";
+
+          result.textContent =
+            "Location प्राप्त करने में समस्या हुई।";
+
+        }
+
+      },
+
+
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+
+    );
+
+  }
+
+
+  /* =========================================
+     VALIDATE FORM
+  ========================================= */
+
+  function validateForm() {
+
+    let valid =
+      true;
+
+
+    const name =
+      document
+        .getElementById(
+          "customerName"
+        )
+        .value
+        .trim();
+
+
+    const phone =
+      document
+        .getElementById(
+          "customerPhone"
+        )
+        .value
+        .trim();
+
+
+    const address =
+      document
+        .getElementById(
+          "customerAddress"
+        )
+        .value
+        .trim();
+
+
+    const nameError =
+      document.getElementById(
+        "nameError"
+      );
+
+
+    const phoneError =
+      document.getElementById(
+        "phoneError"
+      );
+
+
+    const addressError =
+      document.getElementById(
+        "addressError"
+      );
+
+
+    nameError.style.display =
+      "none";
+
+
+    phoneError.style.display =
+      "none";
+
+
+    addressError.style.display =
+      "none";
+
+
+    if (
+      name.length <
+      2
+    ) {
+
+      nameError.style.display =
+        "block";
+
+      valid =
+        false;
+
+    }
+
+
+    if (
+      !/^[0-9]{10}$/.test(
+        phone
+      )
+    ) {
+
+      phoneError.style.display =
+        "block";
+
+      valid =
+        false;
+
+    }
+
+
+    if (
+      address.length <
+      5
+    ) {
+
+      addressError.style.display =
+        "block";
+
+      valid =
+        false;
+
+    }
+
+
+    return valid;
+
+  }
+
+
+  /* =========================================
+     GENERATE ORDER ID
+  ========================================= */
+
+  function generateOrderId() {
+
+    const now =
+      new Date();
+
+
+    const date =
+      now.getTime();
+
+
+    const random =
+      Math.floor(
+        1000 +
+        Math.random() *
+        9000
+      );
+
+
+    return (
+      "ORD-" +
+      date +
+      "-" +
+      random
+    );
+
+  }
+
+
+  /* =========================================
+     PLACE ORDER
+  ========================================= */
+
+  function placeOrder() {
+
+    if (
+      cart.length === 0
+    ) {
+
+      alert(
+        "Cart खाली है।"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !validateForm()
+    ) {
+
+      return;
+
+    }
+
+
+    const name =
+      document
+        .getElementById(
+          "customerName"
+        )
+        .value
+        .trim();
+
+
+    const phone =
+      document
+        .getElementById(
+          "customerPhone"
+        )
+        .value
+        .trim();
+
+
+    const address =
+      document
+        .getElementById(
+          "customerAddress"
+        )
+        .value
+        .trim();
+
+
+    const payment =
+      document.querySelector(
+        'input[name="payment"]:checked'
+      ).value;
+
+
+    const subtotal =
+      cart.reduce(
+        (
+          total,
+          item
+        ) =>
+          total +
+          (
+            Number(
+              item.price
+            ) *
+            Number(
+              item.cartQty
+            )
+          ),
+        0
+      );
+
+
+    const deliveryCharge =
+      0;
+
+
+    const total =
+      subtotal +
+      deliveryCharge;
+
+
+    const orderId =
+      generateOrderId();
+
+
+    /* =====================================
+       CREATE ORDER OBJECT
+    ===================================== */
+
+    const order = {
+
+      orderId:
+        orderId,
+
+      shopId:
+        shopId,
+
+      shopName:
+        currentShop.name,
+
+      customer: {
+
+        name:
+          name,
+
+        phone:
+          phone,
+
+        address:
+          address
+
+      },
+
+      location: {
+
+        latitude:
+          userLatitude,
+
+        longitude:
+          userLongitude
+
+      },
+
+      items:
+        cart,
+
+      subtotal:
+        subtotal,
+
+      deliveryCharge:
+        deliveryCharge,
+
+      total:
+        total,
+
+      paymentMethod:
+        payment,
+
+      status:
+        "Pending",
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    /* =====================================
+       SAVE ORDER
+       
+       यह अभी local demo storage है।
+       बाद में Firebase/Supabase backend
+       में यही order save होगा।
+    ===================================== */
+
+    const orderKey =
+      "localShopOrders_" +
+      shopId;
+
+
+    const oldOrders =
+      JSON.parse(
+        localStorage.getItem(
+          orderKey
+        )
+      ) || [];
+
+
+    oldOrders.push(
+      order
+    );
+
+
+    localStorage.setItem(
+
+      orderKey,
+
+      JSON.stringify(
+        oldOrders
+      )
+
+    );
+
+
+    /* =====================================
+       CLEAR CART
+    ===================================== */
+
+    localStorage.removeItem(
+      "localShopCart_" +
+      shopId
+    );
+
+
+    /* =====================================
+       SHOW SUCCESS
+    ===================================== */
+
+    document.getElementById(
+      "checkoutArea"
+    ).style.display =
+      "none";
+
+
+    document.getElementById(
+      "successArea"
+    ).style.display =
+      "block";
+
+
+    document.getElementById(
+      "orderId"
+    ).textContent =
+      "Order ID: " +
+      orderId;
+
+
+    document.getElementById(
+      "successMessage"
+    ).innerHTML =
+
+      `
+        <strong>
+          ${escapeHtml(
+            currentShop.name
+          )}
+        </strong>
+        <br><br>
+
+        Total:
+        <strong>
+          ${money(
+            total
+          )}
+        </strong>
+
+        <br>
+
+        Payment:
+        ${
+          payment === "cod"
+            ? "Cash on Delivery"
+            : "UPI"
+        }
+      `;
+
+  }
+
+
+  /* =========================================
+     BACK TO SHOP
+  ========================================= */
+
+  function goBack() {
+
+    window.location.href =
+      "shop.html?shop=" +
+      encodeURIComponent(
+        shopId
+      );
+
+  }
+
+
+  function goToShop() {
+
+    window.location.href =
+      "shop.html?shop=" +
+      encodeURIComponent(
+        shopId
+      );
+
+  }
+
+
+  /* =========================================
+     INITIAL CHECK
+  ========================================= */
+
+  if (
+    cart.length === 0
+  ) {
+
+    document.getElementById(
+      "checkoutArea"
+    ).style.display =
+      "none";
+
+
+    document.getElementById(
+      "emptyArea"
+    ).style.display =
+      "block";
+
+  }
+
+  else {
+
+    renderOrder();
+
+  }
+
+
+</script>
+
+</body>
+</html>
